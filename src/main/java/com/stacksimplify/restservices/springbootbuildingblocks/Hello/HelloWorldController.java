@@ -20,6 +20,12 @@ public class HelloWorldController {
 		return "Hello World" ;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET , path = "/HelloWorldBean")
+	
+	public UserDetail HelloWorldBean() {
+		return new UserDetail("Mukul", "Tyagi" , "SRE");
+	}
+	
 	
 
 }
