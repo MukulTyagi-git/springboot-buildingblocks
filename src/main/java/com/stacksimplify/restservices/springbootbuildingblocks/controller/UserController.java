@@ -1,9 +1,13 @@
 package com.stacksimplify.restservices.springbootbuildingblocks.controller;
 
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.stacksimplify.restservices.springbootbuildingblocks.Entity.User;
+import com.stacksimplify.restservices.springbootbuildingblocks.exception.UserExistsException;
+import com.stacksimplify.restservices.springbootbuildingblocks.exception.UserNotFoundException;
 import com.stacksimplify.restservices.springbootbuildingblocks.services.UserService;
 
 //Controller
@@ -43,16 +51,39 @@ public class UserController {
 	
 	
 	@PostMapping("/createuser")
-	public User createUser(@RequestBody User user)
+	
+	public ResponseEntity<Void> createUser(@RequestBody User user , UriComponentsBuilder builder)
 	{
-		return userService.createUser(user);
+		try {
+		userService.createUser(user);
+		
+		HttpHeaders header = new HttpHeader();
+		
+		header.setLocation(builder.path("/serachusersbyid/{id}").buildAndExpand(user.getId()).toUri());
+		
+	
+		
+		return new ResponseEntity<Void>(header ,HttpStatus.CREATED);
+	
+		}
+		catch (UserExistsException ex){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
 	}
 	
 //---------Find User By Id Method -------------------
 	@GetMapping("/serachusersbyid/{id}")
 	public Optional <User> getUserById(@PathVariable("id") long id) {
+		
+		try {
 		Optional<User> user = userService.findUserById(id);
+		
 		return user;	
+		}
+		
+		catch (UserNotFoundException ex){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+		}
 	}
 	
 //--------Update User By Id Method-----------------
@@ -60,7 +91,14 @@ public class UserController {
 	@PutMapping("/updateuserbyid/{id}")
 	public User updateUserById(@PathVariable("id") long id , @RequestBody User user)
 	{
+		try {
 	return userService.updateUserByid(id, user);
+		}
+		
+		catch (UserNotFoundException ex){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+		
 	}
 	
 //------Delete by Id Method-------------------
@@ -68,7 +106,13 @@ public class UserController {
 	@DeleteMapping("/deleteuser/{id}")
 	
 	public void deleteUserByid(@PathVariable("id") long id) {
+		try 
+		{
 		userService.deleteUserByid(id);
+		}
+		catch (UserNotFoundException ex){
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
 	}
 	
 //--------------Find by user name method ---------------------
