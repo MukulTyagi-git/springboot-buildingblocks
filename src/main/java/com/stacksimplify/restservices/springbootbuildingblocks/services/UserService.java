@@ -77,14 +77,6 @@ public class UserService {
 	// Delete User by id
 	
 	public void deleteUserByid(long id) throws UserNotFoundException {
-		
-		 Optional<User> user3 = userRepository.findById(id);
-			
-			if (!user3.isPresent()) {
-				
-				throw new UserNotFoundException("User Not Found in Record to delete, Provide correct id"); 
-			}
-			
 	
 			userRepository.deleteById(id);
 	

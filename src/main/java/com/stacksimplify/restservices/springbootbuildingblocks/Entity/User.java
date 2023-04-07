@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 @Entity(name = "User")
 @Table(name = "UserDetails")
@@ -17,14 +19,25 @@ public class User {
 	@GeneratedValue
 	@Column(name = "ID")
 	private long id;
+	
+	@NotEmpty(message = "Username is mandatory Please enter username")
+	
 	@Column(name = "USER_NAME", length = 50, nullable = false , unique = true)
 	private String username;
+	
+	@Size(min =2 ,message = "FirstName should have atleast 2 characters")
 	@Column(name = "FIRST_NAME", nullable = false)
 	private String firstname;
+	
+	@Size(min =1 ,message = "LastName should have atleast 1 characters")
 	@Column(name = "LAST_NAME")
 	private String lastname;
+	
+	@NotEmpty(message = "Email ID is mandatory Please enter Email Id")
 	@Column(name = "EMAIL_ID", unique = true)
 	private String email;
+	
+	
 	@Column(name = "ROLE")
 	private String role;
 	@Column(name = "SSN", nullable = false , unique = true)
