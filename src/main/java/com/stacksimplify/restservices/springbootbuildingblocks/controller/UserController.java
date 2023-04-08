@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +35,7 @@ import jakarta.validation.constraints.Min;
 
 @RestController
 @Validated
+@RequestMapping(value = "/users")
 public class UserController {
 	
 	// Auto wired UserService
@@ -47,7 +49,7 @@ public class UserController {
 	//@RequestMapping(method = RequestMethod.GET, path = "/users")
 	
 	  //By Get Mapping
-	@GetMapping("/users")
+	@GetMapping()
 	public List<User> getAllUsers(){
 	
 		return userService.getAllUsers();
@@ -62,13 +64,8 @@ public class UserController {
 	{
 		try {
 		userService.createUser(user);
-		
 		HttpHeaders header = new HttpHeader();
-		
-		header.setLocation(builder.path("/serachusersbyid/{id}").buildAndExpand(user.getId()).toUri());
-		
-	
-		
+		header.setLocation(builder.path("/serachusersbyid/{id}").buildAndExpand(user.getId()).toUri());	
 		return new ResponseEntity<Void>(header ,HttpStatus.CREATED);
 	
 		}
