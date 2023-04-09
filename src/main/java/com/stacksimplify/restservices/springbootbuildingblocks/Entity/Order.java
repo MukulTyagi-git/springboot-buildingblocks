@@ -1,5 +1,6 @@
 package com.stacksimplify.restservices.springbootbuildingblocks.Entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name ="orders")
+
 public class Order {
 	
 	@Id

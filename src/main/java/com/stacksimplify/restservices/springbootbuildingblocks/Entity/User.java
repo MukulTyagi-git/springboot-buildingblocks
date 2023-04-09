@@ -5,6 +5,8 @@ package com.stacksimplify.restservices.springbootbuildingblocks.Entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +18,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity(name = "User")
 @Table(name = "UserDetails")
+@JsonFilter(value = "userFilter")
 public class User {
 	
 	@Id
