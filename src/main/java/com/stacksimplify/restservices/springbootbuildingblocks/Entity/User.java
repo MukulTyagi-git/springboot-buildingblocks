@@ -5,6 +5,9 @@ package com.stacksimplify.restservices.springbootbuildingblocks.Entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,9 +17,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+
+
 @Entity(name = "User")
 @Table(name = "UserDetails")
-public class User {
+@JsonIgnoreProperties ({"role", "ssn"})
+
+public class User extends ResourceSupport {
 	
 	@Id
 	@GeneratedValue
@@ -41,9 +48,11 @@ public class User {
 	private String email;
 	
 	
-	@Column(name = "ROLE")
+	@Column(name = "ROLE" ,nullable = true )
 	private String role;
-	@Column(name = "SSN", nullable = false , unique = true)
+	
+	@Column(name = "SSN", nullable = true , unique = true)
+	@JsonIgnore
 	private String ssn;
 	
 	@OneToMany(mappedBy = "user")
