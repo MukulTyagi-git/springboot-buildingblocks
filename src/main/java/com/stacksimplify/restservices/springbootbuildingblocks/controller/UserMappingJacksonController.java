@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,6 +35,9 @@ public class UserMappingJacksonController {
 		@Autowired
 		private UserService userService;
 		
+//-----------Get User MethodBy Id-------------------------------------------------//
+
+
 		@GetMapping("/serachusersbyid/{id}")
 		
 		public MappingJacksonValue getUserById(@PathVariable("id") @Min(1) long id) throws UserNotFoundException {
@@ -68,4 +72,32 @@ public class UserMappingJacksonController {
 			}
 		} 
 
+	
+		//-----------Get User MethodBy Id : Request Param Filter-------------------------------------------------//
+		
+@GetMapping("/serachusersbyidparam/{id}")
+		
+		public MappingJacksonValue getUserById2(@PathVariable("id") @Min(1) long id,
+				@RequestParam Set<String> fields) throws UserNotFoundException {
+			
+			try {
+				
+			Optional<User> optionalUser = userService.findUserById(id);
+			User user = optionalUser.get();
+		
+			FilterProvider filterProvider = new SimpleFilterProvider().addFilter("userFilter",
+					SimpleBeanPropertyFilter.filterOutAllExcept(fields)) ;
+			
+			MappingJacksonValue mapper = new MappingJacksonValue(user);
+			
+			mapper.setFilters(filterProvider);
+			
+			return mapper;
+			
+			}
+			
+			catch (UserNotFoundException ex){
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
+			}
+		} 
 }
