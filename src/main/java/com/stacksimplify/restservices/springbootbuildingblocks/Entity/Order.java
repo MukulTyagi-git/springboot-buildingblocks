@@ -2,6 +2,7 @@ package com.stacksimplify.restservices.springbootbuildingblocks.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +18,9 @@ public class Order {
 	
 	@Id
 	@GeneratedValue
+	@JsonView(Views.Internal.class)
 	private long orderid;
+	@JsonView(Views.External.class)
 	private String orderdesc;
 	
 	
