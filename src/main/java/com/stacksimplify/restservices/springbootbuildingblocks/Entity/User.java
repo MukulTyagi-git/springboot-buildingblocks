@@ -29,6 +29,7 @@ public class User {
 	@Column(name = "ID")
 	private long id;
 	
+	
 	@JsonView(Views.Internal.class)
 	@NotEmpty(message = "Username is mandatory Please enter username")
 	@Column(name = "USER_NAME", length = 50, nullable = false , unique = true)
